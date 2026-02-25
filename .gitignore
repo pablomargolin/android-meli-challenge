@@ -1,0 +1,32 @@
+# Auto generated
+/build/
+*/build/
+.gradle/
+/captures/
+.externalNativeBuild/
+.cxx/
+out/
+*.apk
+*.aab
+*.dex
+*.class
+
+# Local config
+local.properties
+/local.properties
+
+# IDE
+*.iml
+*.ipr
+*.iws
+.idea/
+!.idea/codeStyles/
+!.idea/dictionaries/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Security
+*.jks
+*.keystore
