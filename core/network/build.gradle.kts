@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -35,10 +37,22 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.moshi)
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.logging)
+
+    implementation(libs.moshi.kotlin)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }
