@@ -29,6 +29,7 @@ class MappersTest {
     fun `ArticleDto toDomain maps correctly`() {
         val authorDto = AuthorDto(name = "name")
         val articleDto = ArticleDto(
+            id = 1,
             title = "title",
             authors = listOf(authorDto),
             url = "url",
@@ -39,6 +40,7 @@ class MappersTest {
         )
 
         val expectedDomain = Article(
+            id = 1,
             title = "title",
             authors = listOf(Author(name = "name")),
             url = "url",
@@ -56,6 +58,7 @@ class MappersTest {
     @Test
     fun `ArticleDto toDomain handles null authors list`() {
         val articleDto = ArticleDto(
+            id = 1,
             title = "title",
             authors = null,
             url = "url",
