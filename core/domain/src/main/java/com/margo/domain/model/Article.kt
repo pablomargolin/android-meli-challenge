@@ -1,6 +1,7 @@
 package com.margo.domain.model
 
 data class Article(
+    val id: Int?,
     val title: String?,
     val authors: List<Author>?,
     val url: String?,

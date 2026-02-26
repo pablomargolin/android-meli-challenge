@@ -31,6 +31,7 @@ class NewsRepositoryImplTest {
     @Test
     fun `getNews returns Success with mapped articles when api call is successful`() = runTest {
         val mockArticleDto = ArticleDto(
+            id = 1,
             title = "title",
             authors = listOf(AuthorDto("name")),
             url = "url",

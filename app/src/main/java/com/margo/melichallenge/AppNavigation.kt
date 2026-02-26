@@ -1,12 +1,12 @@
 package com.margo.melichallenge
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.margo.news_detail.presentation.NewsDetailScreen
 import com.margo.news_feed.presentation.NewsFeedScreen
 
 @Composable
@@ -29,11 +29,10 @@ fun SpaceFlightNavGraph() {
             arguments = listOf(
                 navArgument("articleId") { type = NavType.IntType }
             )
-        ) { backStackEntry ->
-            val articleId = backStackEntry.arguments?.getInt("articleId") ?: -1
-
-            // TODO: NewsDetailRoute
-            Text("Article ID: $articleId")
+        ) {
+            NewsDetailScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }
