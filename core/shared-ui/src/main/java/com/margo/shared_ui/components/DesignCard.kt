@@ -1,7 +1,10 @@
 package com.margo.shared_ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -17,7 +20,8 @@ import com.margo.shared_ui.theme.SizeTheme
 @Composable
 fun DesignCard(
     modifier: Modifier = Modifier,
-    shapeDimension: SizeTheme.BaseSize = baseSizes.size05,
+    shapeDimension: SizeTheme.BaseSize = baseSizes.size10,
+    borderColor: ColorTheme.BaseColor = baseColors.surfaceColor,
     backgroundColor: ColorTheme.BaseColor = baseColors.whiteColor,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -29,8 +33,10 @@ fun DesignCard(
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor.color
         ),
-        border = BorderStroke(1.dp, baseColors.surfaceColor.color)
+        border = BorderStroke(1.dp, borderColor.color)
     ) {
-        content()
+        Column {
+            content()
+        }
     }
 }

@@ -3,13 +3,9 @@ package com.margo.shared_ui.components
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.unit.sp
 import com.margo.shared_ui.SpaceFlightTheme
-import com.margo.shared_ui.foundation.Typography
-import com.margo.shared_ui.theme.ColorTheme
 import org.junit.Rule
 import org.junit.Test
-import androidx.compose.ui.graphics.Color
 import com.margo.shared_ui.ThemeScope
 
 class DesignTextTest {
@@ -23,7 +19,7 @@ class DesignTextTest {
         
         composeTestRule.setContent {
             SpaceFlightTheme {
-                val textColor = ThemeScope.baseColors.primaryColor
+                val textColor = ThemeScope.baseColors.blackColor
                 val typography = ThemeScope.baseTypographies.textBaseNormal
                 
                 DesignText(

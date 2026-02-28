@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="breaking_news_title">Breaking News</string>
+    <string name="see_more_title">See more…</string>
+    <string name="retry_button">Retry</string>
+    <string name="empty_news_state">There is no news at this time.</string>
+    <string name="error_no_internet">No internet connection. Please check your wifi or cellular data.</string>
+    <string name="error_server">Space servers are currently down. Please try again later.</string>
+    <string name="error_not_found">We could not find the requested news.</string>
+    <string name="error_unknown">An unexpected error occurred while loading the feed.</string>
+</resources>

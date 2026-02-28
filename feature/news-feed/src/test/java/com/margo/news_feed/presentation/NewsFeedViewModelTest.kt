@@ -29,7 +29,6 @@ class NewsFeedViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = NewsFeedViewModel(repository)
     }
 
     @After
@@ -43,12 +42,11 @@ class NewsFeedViewModelTest {
             Article(1, "title", emptyList(), "url", "image", "site", "summary", "´published")
         )
         coEvery { repository.getNews() } returns Result.Success(mockArticles)
+        
+        viewModel = NewsFeedViewModel(repository)
 
         viewModel.uiState.test {
             assertEquals(NewsFeedUiState.Loading, awaitItem())
-            
-            viewModel.fetchNews()
-
             assertEquals(NewsFeedUiState.Success(mockArticles), awaitItem())
         }
     }
@@ -56,52 +54,48 @@ class NewsFeedViewModelTest {
     @Test
     fun `fetchNews updates uiState to Error NO_INTERNET when repository returns NO_INTERNET`() = runTest {
         coEvery { repository.getNews() } returns Result.Error(ErrorType.NO_INTERNET)
+        
+        viewModel = NewsFeedViewModel(repository)
 
         viewModel.uiState.test {
             assertEquals(NewsFeedUiState.Loading, awaitItem())
-            
-            viewModel.fetchNews()
-            
-            assertEquals(NewsFeedUiState.Error("No hay conexión a internet. Revisa tu wifi o datos."), awaitItem())
+            assertEquals(NewsFeedUiState.Error(ErrorType.NO_INTERNET), awaitItem())
         }
     }
 
     @Test
     fun `fetchNews updates uiState to Error SERVER_ERROR when repository returns SERVER_ERROR`() = runTest {
         coEvery { repository.getNews() } returns Result.Error(ErrorType.SERVER_ERROR)
+        
+        viewModel = NewsFeedViewModel(repository)
 
         viewModel.uiState.test {
             assertEquals(NewsFeedUiState.Loading, awaitItem())
-            
-            viewModel.fetchNews()
-            
-            assertEquals(NewsFeedUiState.Error("Los servidores espaciales están fallando. Intenta más tarde."), awaitItem())
+            assertEquals(NewsFeedUiState.Error(ErrorType.SERVER_ERROR), awaitItem())
         }
     }
 
     @Test
     fun `fetchNews updates uiState to Error NOT_FOUND when repository returns NOT_FOUND`() = runTest {
         coEvery { repository.getNews() } returns Result.Error(ErrorType.NOT_FOUND)
+        
+        viewModel = NewsFeedViewModel(repository)
 
         viewModel.uiState.test {
             assertEquals(NewsFeedUiState.Loading, awaitItem())
-            
-            viewModel.fetchNews()
-            
-            assertEquals(NewsFeedUiState.Error("No pudimos encontrar las noticias solicitadas."), awaitItem())
+            assertEquals(NewsFeedUiState.Error(ErrorType.NOT_FOUND), awaitItem())
         }
     }
 
     @Test
     fun `fetchNews updates uiState to Error UNKNOWN when repository returns UNKNOWN`() = runTest {
         coEvery { repository.getNews() } returns Result.Error(ErrorType.UNKNOWN)
+        
+        viewModel = NewsFeedViewModel(repository)
 
         viewModel.uiState.test {
             assertEquals(NewsFeedUiState.Loading, awaitItem())
-            
-            viewModel.fetchNews()
-            
-            assertEquals(NewsFeedUiState.Error("Ocurrió un error inesperado al cargar el feed."), awaitItem())
+            assertEquals(NewsFeedUiState.Error(ErrorType.UNKNOWN), awaitItem())
         }
     }
 }
