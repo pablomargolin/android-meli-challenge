@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow.Companion
 import com.margo.shared_ui.theme.ColorTheme
 import com.margo.shared_ui.foundation.Typography
 
@@ -18,7 +20,8 @@ fun DesignText(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     style: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign? = null
+    textAlign: TextAlign? = null,
+    overflow: TextOverflow = TextOverflow.Clip
 ) {
     Text(
         modifier = modifier,
@@ -29,6 +32,7 @@ fun DesignText(
         maxLines = maxLines,
         minLines = minLines,
         textAlign = textAlign,
-        style = style
+        style = style,
+        overflow = overflow
     )
 }
