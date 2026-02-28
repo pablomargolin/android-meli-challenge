@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.margo.news_detail.presentation.NewsDetailScreen
-import com.margo.news_feed.presentation.NewsFeedScreen
+import com.margo.news_feed.presentation.NewsFeedRoute
 
 @Composable
 fun SpaceFlightNavGraph() {
@@ -18,7 +18,7 @@ fun SpaceFlightNavGraph() {
         startDestination = "news_feed"
     ) {
         composable(route = "news_feed") {
-            NewsFeedScreen(
+            NewsFeedRoute(
                 onNavigateToDetail = { articleId ->
                     navController.navigate("news_detail/$articleId")
                 }
