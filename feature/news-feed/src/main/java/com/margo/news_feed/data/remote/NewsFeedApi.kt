@@ -9,6 +9,7 @@ interface NewsFeedApi {
 
     @GET("articles")
     suspend fun getArticles(
-        @Query("limit") limit: Int = 10
+        @Query("limit") limit: Int = 10,
+        @Query("search") query: String? = null
     ): Response<NewsFeedResponseDto>
 }
