@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+
 @HiltViewModel
 class NewsFeedViewModel @Inject constructor(
     private val newsRepository: NewsRepository
@@ -19,14 +22,29 @@ class NewsFeedViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<NewsFeedUiState>(NewsFeedUiState.Loading)
     val uiState: StateFlow<NewsFeedUiState> = _uiState.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private var searchJob: Job? = null
+
     init {
         fetchNews()
     }
-    fun fetchNews() {
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500)
+            fetchNews(query.takeIf { it.isNotBlank() })
+        }
+    }
+
+    fun fetchNews(query: String? = null) {
         _uiState.value = NewsFeedUiState.Loading
 
         viewModelScope.launch {
-            when (val result = newsRepository.getNews()) {
+            when (val result = newsRepository.getNews(query)) {
 
                 is Result.Success -> {
                     _uiState.value = NewsFeedUiState.Success(result.data)

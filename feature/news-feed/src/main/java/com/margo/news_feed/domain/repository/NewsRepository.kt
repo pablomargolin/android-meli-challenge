@@ -4,5 +4,5 @@ import com.margo.domain.common.Result
 import com.margo.domain.model.Article
 
 interface NewsRepository {
-    suspend fun getNews(): Result<List<Article>>
+    suspend fun getNews(query: String? = null): Result<List<Article>>
 }

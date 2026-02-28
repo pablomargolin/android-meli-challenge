@@ -11,8 +11,8 @@ import javax.inject.Inject
 class NewsRepositoryImpl @Inject constructor(
     private val api: NewsFeedApi
 ): NewsRepository {
-    override suspend fun getNews(): Result<List<Article>> {
-        val networkResult = safeApiCall { api.getArticles() }
+    override suspend fun getNews(query: String?): Result<List<Article>> {
+        val networkResult = safeApiCall { api.getArticles(query = query) }
 
         return when (networkResult) {
             is Result.Success -> {

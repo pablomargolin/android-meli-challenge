@@ -19,7 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.margo.domain.common.ErrorType
+import com.margo.shared_ui.components.DesignSearchBar
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,17 +40,22 @@ fun NewsFeedRoute(
     viewModel: NewsFeedViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     NewsFeedScreen(
         uiState = uiState,
+        searchQuery = searchQuery,
+        onQueryChange = viewModel::updateSearchQuery,
         onNavigateToDetail = onNavigateToDetail,
-        onRetry = { viewModel.fetchNews() }
+        onRetry = { viewModel.fetchNews(searchQuery.takeIf { it.isNotBlank() }) }
     )
 }
 
 @Composable
-fun NewsFeedScreen(
+internal fun NewsFeedScreen(
     uiState: NewsFeedUiState,
+    searchQuery: String,
+    onQueryChange: (String) -> Unit,
     onNavigateToDetail: (Int) -> Unit,
     onRetry: () -> Unit
 ) {
@@ -64,6 +71,8 @@ fun NewsFeedScreen(
                 is NewsFeedUiState.Loading -> LoadingScreen()
                 is NewsFeedUiState.Success -> ArticlesContent(
                     articles = uiState.articles,
+                    searchQuery = searchQuery,
+                    onQueryChange = onQueryChange,
                     onNavigateToDetail = onNavigateToDetail
                 )
                 is NewsFeedUiState.Error -> {
@@ -84,7 +93,7 @@ fun NewsFeedScreen(
 }
 
 @Composable
-fun ErrorScreen(message: String, onRetry: () -> Unit) {
+private fun ErrorScreen(message: String, onRetry: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,12 +126,13 @@ fun ErrorScreen(message: String, onRetry: () -> Unit) {
 }
 
 @Composable
-fun LoadingScreen() {
+private fun LoadingScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
+            modifier = Modifier.testTag("needScreenLoading"),
             color = baseColors.actionColor.color
         )
     }
@@ -131,16 +141,31 @@ fun LoadingScreen() {
 @Composable
 private fun ArticlesContent(
     articles: List<Article>,
+    searchQuery: String,
+    onQueryChange: (String) -> Unit,
     onNavigateToDetail: (Int) -> Unit
 ) {
     if (articles.isEmpty()) {
-        DesignText(
-            modifier = Modifier.fillMaxSize().padding(baseSizes.size20.dimension),
-            text = stringResource(R.string.empty_news_state),
-            typography = baseTypographies.textBaseNormal,
-            textColor = baseColors.blackColor,
-            textAlign = TextAlign.Center
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = baseSizes.size20.dimension)
+        ) {
+            DesignSearchBar(
+                modifier = Modifier.padding(top = baseSizes.size10.dimension),
+                query = searchQuery,
+                onQueryChange = onQueryChange,
+                placeholderText = "Search news..."
+            )
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                DesignText(
+                    text = stringResource(R.string.empty_news_state),
+                    typography = baseTypographies.textBaseNormal,
+                    textColor = baseColors.blackColor,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
         return
     }
 
@@ -152,6 +177,15 @@ private fun ArticlesContent(
             .padding(horizontal = baseSizes.size20.dimension),
         verticalArrangement = Arrangement.spacedBy(baseSizes.size10.dimension)
     ) {
+        item {
+            DesignSearchBar(
+                modifier = Modifier.padding(top = baseSizes.size10.dimension),
+                query = searchQuery,
+                onQueryChange = onQueryChange,
+                placeholderText = "Search news..."
+            )
+        }
+        
         item {
             DesignText(
                 text = stringResource(R.string.breaking_news_title),
