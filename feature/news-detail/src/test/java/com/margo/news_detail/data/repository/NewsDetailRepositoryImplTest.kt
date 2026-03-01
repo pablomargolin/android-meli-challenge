@@ -21,7 +21,16 @@ class NewsDetailRepositoryImplTest {
 
     @Test
     fun `getArticleById returns Success when api returns successful response`() = runTest {
-        val dto = ArticleDetailDto(1, "title", "summary", "url", "published")
+        val dto = ArticleDetailDto(
+            id = 1,
+            title = "title",
+            authors = null,
+            summary = "summary",
+            imageUrl = "url",
+            url = null,
+            newsSite = null,
+            publishedAt = "published"
+        )
         coEvery { api.getArticleById(1) } returns Response.success(dto)
 
         val result = repository.getArticleById(1)

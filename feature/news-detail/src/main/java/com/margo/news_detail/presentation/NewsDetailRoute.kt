@@ -50,7 +50,7 @@ fun NewsDetailRoute(
 }
 
 @Composable
-private fun NewsDetailScreen(
+internal fun NewsDetailScreen(
     onBackClick: () -> Unit,
     uiState: NewsDetailUiState,
     onRetry: () -> Unit
