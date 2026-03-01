@@ -10,8 +10,8 @@ fun ArticleDetailDto.toDomain(): Article {
         summary = this.summary,
         imageUrl = this.imageUrl ?: "",
         publishedAt = this.publishedAt ?: "",
-        authors = null,
-        newsSite = null,
-        url = null
+        authors = authors?.map { it.toDomain() },
+        newsSite = this.newsSite,
+        url = this.url
     )
 }

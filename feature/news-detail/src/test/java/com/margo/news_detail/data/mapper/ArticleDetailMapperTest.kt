@@ -1,6 +1,7 @@
 package com.margo.news_detail.data.mapper
 
 import com.margo.news_detail.data.remote.dto.ArticleDetailDto
+import com.margo.news_detail.data.remote.dto.AuthorDetailDto
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -11,8 +12,11 @@ class ArticleDetailMapperTest {
         val dto = ArticleDetailDto(
             id = 1,
             title = "title",
+            authors = listOf(AuthorDetailDto("name")),
             summary = "summary",
             imageUrl = "url",
+            url = "articleUrl",
+            newsSite = "newsSite",
             publishedAt = "published"
         )
         val domain = dto.toDomain()
@@ -22,9 +26,10 @@ class ArticleDetailMapperTest {
         assertEquals("summary", domain.summary)
         assertEquals("url", domain.imageUrl)
         assertEquals("published", domain.publishedAt)
-        assertNull(domain.authors)
-        assertNull(domain.newsSite)
-        assertNull(domain.url)
+        assertEquals(1, domain.authors?.size)
+        assertEquals("name", domain.authors?.first()?.name)
+        assertEquals("newsSite", domain.newsSite)
+        assertEquals("articleUrl", domain.url)
     }
 
     @Test
@@ -32,13 +37,19 @@ class ArticleDetailMapperTest {
         val dto = ArticleDetailDto(
             id = 2,
             title = "title 2",
+            authors = null,
             summary = "summary 2",
             imageUrl = null,
+            url = null,
+            newsSite = null,
             publishedAt = null
         )
         val domain = dto.toDomain()
 
         assertEquals("", domain.imageUrl)
         assertEquals("", domain.publishedAt)
+        assertNull(domain.authors)
+        assertNull(domain.url)
+        assertNull(domain.newsSite)
     }
 }

@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.margo.domain.model.Article
 import com.margo.domain.utils.empty
 import com.margo.news_feed.R
+import com.margo.network.R as NetworkR
 import com.margo.shared_ui.ThemeScope.baseColors
 import com.margo.shared_ui.ThemeScope.baseSizes
 import com.margo.shared_ui.ThemeScope.baseTypographies
@@ -77,10 +78,10 @@ internal fun NewsFeedScreen(
                 )
                 is NewsFeedUiState.Error -> {
                     val errorMessage = when (uiState.errorType) {
-                        ErrorType.NO_INTERNET -> stringResource(R.string.error_no_internet)
-                        ErrorType.SERVER_ERROR -> stringResource(R.string.error_server)
-                        ErrorType.NOT_FOUND -> stringResource(R.string.error_not_found)
-                        ErrorType.UNKNOWN -> stringResource(R.string.error_unknown)
+                        ErrorType.NO_INTERNET -> stringResource(NetworkR.string.error_no_internet)
+                        ErrorType.SERVER_ERROR -> stringResource(NetworkR.string.error_server)
+                        ErrorType.NOT_FOUND -> stringResource(NetworkR.string.error_not_found)
+                        ErrorType.UNKNOWN -> stringResource(NetworkR.string.error_unknown)
                     }
                     ErrorScreen(
                         message = errorMessage,

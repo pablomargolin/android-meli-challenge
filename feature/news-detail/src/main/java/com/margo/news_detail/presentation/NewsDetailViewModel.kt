@@ -22,6 +22,9 @@ class NewsDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<NewsDetailUiState>(NewsDetailUiState.Loading)
     val uiState: StateFlow<NewsDetailUiState> = _uiState.asStateFlow()
 
+    init {
+        getArticleDetail()
+    }
     fun getArticleDetail() {
         val id: Int = checkNotNull(savedStateHandle["articleId"])
         _uiState.value = NewsDetailUiState.Loading
@@ -38,14 +41,7 @@ class NewsDetailViewModel @Inject constructor(
                         Log.e("NewsFeedViewModel", "Fallo al obtener noticias: ${error.message}", error)
                     }
 
-                    val errorMessage = when (result.errorType) {
-                        ErrorType.NO_INTERNET -> "No hay conexión a internet. Revisa tu wifi o datos."
-                        ErrorType.SERVER_ERROR -> "Los servidores espaciales están fallando. Intenta más tarde."
-                        ErrorType.NOT_FOUND -> "No pudimos encontrar el articulo."
-                        ErrorType.UNKNOWN -> "Ocurrió un error inesperado al cargar el articulo."
-                    }
-
-                    _uiState.value = NewsDetailUiState.Error(errorMessage)
+                    _uiState.value = NewsDetailUiState.Error(result.errorType)
                 }
             }
         }

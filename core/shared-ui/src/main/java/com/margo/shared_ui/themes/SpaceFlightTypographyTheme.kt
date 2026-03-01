@@ -9,6 +9,7 @@ import com.margo.shared_ui.foundation.Typography
 
 val SpaceFlightTypographyTheme: TypographyTheme = object: TypographyTheme() {
     override val textBaseNormal: Typography = Typography(FontFamily(Font(resId = R.font.dmsans_medium)), 24.sp)
+    override val textBaseXNormal: Typography = Typography(FontFamily(Font(resId = R.font.dmsans_medium)), 18.sp)
     override val textBaseNormalSmall: Typography = Typography(FontFamily(Font(resId = R.font.dmsans_medium)), 12.sp)
     override val textBaseNormalXSmall: Typography = Typography(FontFamily(Font(resId = R.font.dmsans_medium)), 10.sp)
     override val textBaseBold: Typography = Typography(FontFamily(Font(resId = R.font.dmsans_bold)), 24.sp)
