@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.margo.news_detail.presentation.NewsDetailScreen
+import com.margo.news_detail.presentation.NewsDetailRoute
 import com.margo.news_feed.presentation.NewsFeedRoute
 
 @Composable
@@ -30,7 +30,7 @@ fun SpaceFlightNavGraph() {
                 navArgument("articleId") { type = NavType.IntType }
             )
         ) {
-            NewsDetailScreen(
+            NewsDetailRoute(
                 onBackClick = { navController.popBackStack() }
             )
         }

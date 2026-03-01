@@ -9,5 +9,8 @@ val SpaceFlightSizeTheme: SizeTheme = object: SizeTheme() {
     override val size04: BaseSize = BaseSize(dimension = 4.dp)
     override val size05: BaseSize = BaseSize(dimension = 5.dp)
     override val size10: BaseSize = BaseSize(dimension = 10.dp)
+    override val size15: BaseSize = BaseSize(dimension = 15.dp)
     override val size20: BaseSize = BaseSize(dimension = 20.dp)
+    override val size25: BaseSize = BaseSize(dimension = 25.dp)
+    override val size200: BaseSize = BaseSize(dimension = 200.dp)
 }

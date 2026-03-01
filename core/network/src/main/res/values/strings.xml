@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_no_internet">No internet connection. Please check your wifi or cellular data.</string>
+    <string name="error_server">Space servers are currently down. Please try again later.</string>
+    <string name="error_not_found">We could not find the requested information.</string>
+    <string name="error_unknown">An unexpected error occurred while loading.</string>
+</resources>

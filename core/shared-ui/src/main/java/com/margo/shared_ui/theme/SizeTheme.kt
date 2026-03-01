@@ -13,7 +13,10 @@ abstract class SizeTheme {
     abstract val size04: BaseSize
     abstract val size05: BaseSize
     abstract val size10: BaseSize
+    abstract val size15: BaseSize
     abstract val size20: BaseSize
+    abstract val size25: BaseSize
+    abstract val size200: BaseSize
     @JvmInline
     value class BaseSize(
         val dimension: Dp

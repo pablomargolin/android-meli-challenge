@@ -47,6 +47,7 @@ kotlin {
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:network"))
+    implementation(project(":core:shared-ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -66,6 +67,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.network)
 
     implementation(libs.retrofit.core)
     implementation(libs.moshi.kotlin)

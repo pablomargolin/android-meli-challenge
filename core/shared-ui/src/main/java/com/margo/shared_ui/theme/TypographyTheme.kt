@@ -9,6 +9,7 @@ import com.margo.shared_ui.themes.SpaceFlightTypographyTheme
 @Immutable
 abstract class TypographyTheme {
     abstract val textBaseNormal: Typography
+    abstract val textBaseXNormal: Typography
     abstract val textBaseNormalSmall: Typography
     abstract val textBaseNormalXSmall: Typography
     abstract val textBaseBold: Typography
