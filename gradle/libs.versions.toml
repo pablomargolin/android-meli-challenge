@@ -48,22 +48,22 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 # Material
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
-# Coil (Image Loading)
+# Coil
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-compose-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil-network" }
 
-# Hilt (Dependency Injection)
+# Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltExt" }
 
-# Retrofit & OkHttp (Network)
+# Retrofit & OkHttp
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
-# Moshi (JSON Parsing)
+# Moshi
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 
 # Logging

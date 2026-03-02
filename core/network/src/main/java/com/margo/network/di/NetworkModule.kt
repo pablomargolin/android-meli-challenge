@@ -14,6 +14,10 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+/**
+ * Hilt module that provides network-related dependencies such as Retrofit, OkHttpClient, and Moshi.
+ * These instances are provided as Singletons across the entire application lifecycle.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

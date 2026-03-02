@@ -11,6 +11,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Implementation of [NewsRepository] that fetches data from the [NewsFeedApi].
+ * It handles the execution of network calls on a designated background dispatcher and maps DTOs to Domain models.
+ *
+ * @property api The Retrofit API interface for fetching news data.
+ * @property ioDispatcher The coroutine dispatcher used for background operations (typically IO).
+ */
 class NewsRepositoryImpl @Inject constructor(
     private val api: NewsFeedApi,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher

@@ -43,6 +43,13 @@ import com.margo.shared_ui.ThemeScope.baseTypographies
 import com.margo.shared_ui.components.DesignHighlightImageCard
 import com.margo.shared_ui.components.DesignText
 
+/**
+ * Entry point route for the News Feed screen.
+ * Connects the [NewsFeedViewModel] state and actions to the [NewsFeedScreen] UI.
+ *
+ * @param onNavigateToDetail Callback triggered with an article ID to navigate to its details.
+ * @param viewModel The ViewModel that manages the state of this screen.
+ */
 @Composable
 fun NewsFeedRoute(
     onNavigateToDetail: (Int) -> Unit,

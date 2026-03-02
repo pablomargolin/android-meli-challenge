@@ -35,6 +35,13 @@ import com.margo.network.R as NetworkR
 import com.margo.shared_ui.components.DesignNavigationBar
 import com.margo.shared_ui.components.DesignText
 
+/**
+ * Entry point route for the News Detail screen.
+ * Connects the [NewsDetailViewModel] state to the [NewsDetailScreen] UI.
+ *
+ * @param onBackClick Callback triggered when the user presses the back navigation icon.
+ * @param viewModel The ViewModel that manages the state of this screen.
+ */
 @Composable
 fun NewsDetailRoute(
     onBackClick: () -> Unit,

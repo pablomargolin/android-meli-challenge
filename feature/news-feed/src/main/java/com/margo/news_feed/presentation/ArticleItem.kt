@@ -30,6 +30,17 @@ import com.margo.shared_ui.components.DesignText
 
 import androidx.compose.foundation.clickable
 
+/**
+ * A Composable card representing a single news article in a list.
+ * Displays a thumbnail image, title, author, and publication date.
+ *
+ * @param modifier The modifier to be applied to the layout.
+ * @param imageUrl The URL of the thumbnail image.
+ * @param title The headline of the article.
+ * @param authors A list of authors; usually only the first one is displayed.
+ * @param publishedAt The formatted publication date.
+ * @param onClick Callback triggered when the card is clicked.
+ */
 @Composable
 fun ArticleItem(
     modifier: Modifier = Modifier,

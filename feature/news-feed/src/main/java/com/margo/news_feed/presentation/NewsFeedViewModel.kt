@@ -16,14 +16,28 @@ import timber.log.Timber
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
+/**
+ * ViewModel responsible for managing the state and logic of the News Feed screen.
+ * It handles fetching paginated news, managing search queries, and retaining state across configuration changes.
+ *
+ * @property newsRepository The repository used to fetch news data.
+ */
 @HiltViewModel
 class NewsFeedViewModel @Inject constructor(
     private val newsRepository: NewsRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<NewsFeedUiState>(NewsFeedUiState.Loading)
+    
+    /**
+     * The observable state of the UI. Represents loading, success (with data), or error states.
+     */
     val uiState: StateFlow<NewsFeedUiState> = _uiState.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
+    
+    /**
+     * The current search query entered by the user.
+     */
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     private var searchJob: Job? = null
@@ -37,6 +51,11 @@ class NewsFeedViewModel @Inject constructor(
         fetchNews()
     }
 
+    /**
+     * Updates the current search query and triggers a new debounced network request.
+     *
+     * @param query The new search query string.
+     */
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         searchJob?.cancel()
@@ -46,6 +65,12 @@ class NewsFeedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Fetches news articles from the repository.
+     *
+     * @param query Optional search term to filter results.
+     * @param isRefresh If true, clears the current list and resets pagination. If false, fetches the next page.
+     */
     fun fetchNews(query: String? = null, isRefresh: Boolean = true) {
         if (isRefresh) {
             currentOffset = 0
@@ -102,11 +127,17 @@ class NewsFeedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Triggers the pagination logic to fetch the next set of articles using the current search query.
+     */
     fun loadMore() {
         val query = _searchQuery.value.takeIf { it.isNotBlank() }
         fetchNews(query, isRefresh = false)
     }
 
+    /**
+     * Clears any existing pagination error from the UI state, usually called after a Toast is displayed.
+     */
     fun clearPaginationError() {
         val currentState = _uiState.value
         if (currentState is NewsFeedUiState.Success) {

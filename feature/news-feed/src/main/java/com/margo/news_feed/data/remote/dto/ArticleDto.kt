@@ -2,6 +2,9 @@ package com.margo.news_feed.data.remote.dto
 
 import com.squareup.moshi.Json
 
+/**
+ * Data Transfer Object (DTO) representing an article item in the news feed list.
+ */
 data class ArticleDto(
     @Json(name = "id")
     val id: Int?,

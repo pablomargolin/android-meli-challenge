@@ -11,6 +11,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Implementation of [NewsDetailRepository] that fetches article details from the [NewsDetailApi].
+ * It executes network requests on a designated background dispatcher and maps the resulting DTOs to Domain models.
+ *
+ * @property api The Retrofit API interface for fetching detail data.
+ * @property ioDispatcher The coroutine dispatcher used for background IO operations.
+ */
 class NewsDetailRepositoryImpl @Inject constructor(
     private val api: NewsDetailApi,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher

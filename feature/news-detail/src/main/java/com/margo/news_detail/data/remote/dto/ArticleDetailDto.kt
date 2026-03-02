@@ -2,6 +2,9 @@ package com.margo.news_detail.data.remote.dto
 
 import com.squareup.moshi.Json
 
+/**
+ * Data Transfer Object (DTO) representing an individual article's details from the API.
+ */
 data class ArticleDetailDto(
     @Json(name = "id") val id: Int,
     @Json(name = "title") val title: String,
