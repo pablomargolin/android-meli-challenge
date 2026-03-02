@@ -1,30 +1,36 @@
 package com.margo.news_feed.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Scaffold
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.margo.domain.common.ErrorType
-import com.margo.shared_ui.components.DesignSearchBar
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import com.margo.domain.common.ErrorType
+import com.margo.shared_ui.components.DesignSearchBar
 import com.margo.domain.model.Article
 import com.margo.domain.utils.empty
 import com.margo.news_feed.R
@@ -48,6 +54,7 @@ fun NewsFeedRoute(
         searchQuery = searchQuery,
         onQueryChange = viewModel::updateSearchQuery,
         onNavigateToDetail = onNavigateToDetail,
+        onLoadMore = viewModel::loadMore,
         onRetry = { viewModel.fetchNews(searchQuery.takeIf { it.isNotBlank() }) }
     )
 }
@@ -58,6 +65,7 @@ internal fun NewsFeedScreen(
     searchQuery: String,
     onQueryChange: (String) -> Unit,
     onNavigateToDetail: (Int) -> Unit,
+    onLoadMore: () -> Unit,
     onRetry: () -> Unit
 ) {
     Scaffold(
@@ -73,8 +81,10 @@ internal fun NewsFeedScreen(
                 is NewsFeedUiState.Success -> ArticlesContent(
                     articles = uiState.articles,
                     searchQuery = searchQuery,
+                    isPaginating = uiState.isPaginating,
                     onQueryChange = onQueryChange,
-                    onNavigateToDetail = onNavigateToDetail
+                    onNavigateToDetail = onNavigateToDetail,
+                    onLoadMore = onLoadMore
                 )
                 is NewsFeedUiState.Error -> {
                     val errorMessage = when (uiState.errorType) {
@@ -143,8 +153,10 @@ private fun LoadingScreen() {
 private fun ArticlesContent(
     articles: List<Article>,
     searchQuery: String,
+    isPaginating: Boolean,
     onQueryChange: (String) -> Unit,
-    onNavigateToDetail: (Int) -> Unit
+    onNavigateToDetail: (Int) -> Unit,
+    onLoadMore: () -> Unit
 ) {
     if (articles.isEmpty()) {
         Column(
@@ -171,8 +183,21 @@ private fun ArticlesContent(
     }
 
     val firstArticle = articles.first()
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .filter { it != null && it >= articles.size }
+            .distinctUntilChanged()
+            .collect { lastVisibleIndex ->
+                if (lastVisibleIndex != null && lastVisibleIndex >= listState.layoutInfo.totalItemsCount - 3) {
+                    onLoadMore()
+                }
+            }
+    }
 
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = baseSizes.size20.dimension),
@@ -228,6 +253,26 @@ private fun ArticlesContent(
                     article.id?.let { onNavigateToDetail(it) }
                 }
             )
+        }
+        
+        if (isPaginating) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(baseSizes.size10.dimension),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.testTag("paginationLoading"),
+                        color = baseColors.actionColor.color
+                    )
+                }
+            }
+        }
+        
+        item {
+            Spacer(modifier = Modifier.height(baseSizes.size20.dimension))
         }
     }
 }
