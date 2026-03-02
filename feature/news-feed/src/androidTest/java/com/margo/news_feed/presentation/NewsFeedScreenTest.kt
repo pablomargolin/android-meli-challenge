@@ -27,6 +27,7 @@ class NewsFeedScreenTest {
                     searchQuery = "",
                     onQueryChange = {},
                     onNavigateToDetail = {},
+                    onLoadMore = {},
                     onRetry = {}
                 )
             }
@@ -47,6 +48,7 @@ class NewsFeedScreenTest {
                     searchQuery = "",
                     onQueryChange = {},
                     onNavigateToDetail = {},
+                    onLoadMore = {},
                     onRetry = { retryClicked = true }
                 )
             }
@@ -66,6 +68,7 @@ class NewsFeedScreenTest {
                     searchQuery = "Mars",
                     onQueryChange = {},
                     onNavigateToDetail = {},
+                    onLoadMore = {},
                     onRetry = {}
                 )
             }
@@ -108,6 +111,7 @@ class NewsFeedScreenTest {
                     searchQuery = "",
                     onQueryChange = {},
                     onNavigateToDetail = { navigatedId = it },
+                    onLoadMore = {},
                     onRetry = {}
                 )
             }
@@ -118,5 +122,36 @@ class NewsFeedScreenTest {
         composeTestRule.onNodeWithText("title2").assertIsDisplayed()
         composeTestRule.onNodeWithText("title2").performClick()
         assertTrue(navigatedId == 2)
+    }
+
+    @Test
+    fun newsFeedScreen_whenPaginating_showsPaginationLoader() {
+        val testArticles = listOf(
+            Article(
+                id = 1,
+                title = "title1",
+                authors = listOf(Author("name1")),
+                url = "url",
+                imageUrl = "image",
+                newsSite = "site",
+                summary = "summary",
+                publishedAt = "1/1"
+            )
+        )
+
+        composeTestRule.setContent {
+            SpaceFlightTheme {
+                NewsFeedScreen(
+                    uiState = NewsFeedUiState.Success(testArticles, isPaginating = true),
+                    searchQuery = "",
+                    onQueryChange = {},
+                    onNavigateToDetail = {},
+                    onLoadMore = {},
+                    onRetry = {}
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithTag("paginationLoading").assertIsDisplayed()
     }
 }
