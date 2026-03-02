@@ -91,7 +91,10 @@ class NewsFeedViewModel @Inject constructor(
                     } else {
                         val currentState = _uiState.value
                         if (currentState is NewsFeedUiState.Success) {
-                            _uiState.value = currentState.copy(isPaginating = false)
+                            _uiState.value = currentState.copy(
+                                isPaginating = false,
+                                paginationError = result.errorType
+                            )
                         }
                     }
                 }
@@ -102,5 +105,12 @@ class NewsFeedViewModel @Inject constructor(
     fun loadMore() {
         val query = _searchQuery.value.takeIf { it.isNotBlank() }
         fetchNews(query, isRefresh = false)
+    }
+
+    fun clearPaginationError() {
+        val currentState = _uiState.value
+        if (currentState is NewsFeedUiState.Success) {
+            _uiState.value = currentState.copy(paginationError = null)
+        }
     }
 }
