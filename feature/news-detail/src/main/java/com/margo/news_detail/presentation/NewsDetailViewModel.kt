@@ -1,6 +1,5 @@
 package com.margo.news_detail.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.SavedStateHandle
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +38,7 @@ class NewsDetailViewModel @Inject constructor(
 
                 is Result.Error -> {
                     result.exception?.let { error ->
-                        Log.e("NewsFeedViewModel", "Fallo al obtener noticias: ${error.message}", error)
+                        Timber.e(error, "Failed to fetch article details")
                     }
 
                     _uiState.value = NewsDetailUiState.Error(result.errorType)

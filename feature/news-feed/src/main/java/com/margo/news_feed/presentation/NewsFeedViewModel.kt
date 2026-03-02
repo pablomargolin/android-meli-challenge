@@ -1,9 +1,8 @@
 package com.margo.news_feed.presentation
 
-import android.util.Log
-import com.margo.domain.common.Result
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.margo.domain.common.Result
 import com.margo.domain.model.Article
 import com.margo.news_feed.domain.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -85,7 +85,7 @@ class NewsFeedViewModel @Inject constructor(
                     isPaginating = false
                     if (isRefresh) {
                         result.exception?.let { error ->
-                            Log.e("NewsFeedViewModel", "Fallo al obtener noticias: ${error.message}", error)
+                            Timber.e(error, "Failed to fetch news")
                         }
                         _uiState.value = NewsFeedUiState.Error(result.errorType)
                     } else {
