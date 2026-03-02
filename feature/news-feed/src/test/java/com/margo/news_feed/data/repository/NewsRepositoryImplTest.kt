@@ -43,7 +43,7 @@ class NewsRepositoryImplTest {
         val mockResponseDto = NewsFeedResponseDto(results = listOf(mockArticleDto))
         val response = Response.success(mockResponseDto)
         
-        coEvery { api.getArticles(query = any()) } returns response
+        coEvery { api.getArticles(limit = any(), offset = any(), query = any()) } returns response
 
         val result = repository.getNews()
 
@@ -56,7 +56,7 @@ class NewsRepositoryImplTest {
 
     @Test
     fun `getNews returns Error when api call fails with exception`() = runTest {
-        coEvery { api.getArticles(query = any()) } throws Exception("Network error")
+        coEvery { api.getArticles(limit = any(), offset = any(), query = any()) } throws Exception("Network error")
 
         val result = repository.getNews()
 
@@ -71,7 +71,7 @@ class NewsRepositoryImplTest {
             404,
             "Not Found".toResponseBody("application/json".toMediaTypeOrNull())
         )
-        coEvery { api.getArticles(query = any()) } returns errorResponse
+        coEvery { api.getArticles(limit = any(), offset = any(), query = any()) } returns errorResponse
 
         val result = repository.getNews()
 
