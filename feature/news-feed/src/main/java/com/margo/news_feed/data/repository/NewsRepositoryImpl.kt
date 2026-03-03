@@ -27,7 +27,9 @@ class NewsRepositoryImpl @Inject constructor(
             val networkResult = safeApiCall { api.getArticles(query = query, offset = offset) }
             when (networkResult) {
                 is Result.Success -> {
-                    val articlesDomain = networkResult.data.results.map { it.toDomain() }
+                    val articlesDomain = networkResult.data.results.mapNotNull { dto ->
+                        runCatching { dto.toDomain() }.getOrNull()
+                    }
                     Result.Success(articlesDomain)
                 }
                 is Result.Error -> {

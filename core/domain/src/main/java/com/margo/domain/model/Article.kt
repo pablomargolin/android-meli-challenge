@@ -13,12 +13,12 @@ package com.margo.domain.model
  * @property publishedAt The formatted publication date string.
  */
 data class Article(
-    val id: Int?,
-    val title: String?,
-    val authors: List<Author>?,
+    val id: Int,
+    val title: String,
+    val authors: List<Author>,
     val url: String?,
     val imageUrl: String?,
     val newsSite: String?,
-    val summary: String?,
-    val publishedAt: String?
+    val summary: String,
+    val publishedAt: String
 )

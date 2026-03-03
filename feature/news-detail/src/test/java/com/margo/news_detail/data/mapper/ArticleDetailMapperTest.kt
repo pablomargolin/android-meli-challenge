@@ -26,8 +26,8 @@ class ArticleDetailMapperTest {
         assertEquals("summary", domain.summary)
         assertEquals("url", domain.imageUrl)
         assertEquals("published", domain.publishedAt)
-        assertEquals(1, domain.authors?.size)
-        assertEquals("name", domain.authors?.first()?.name)
+        assertEquals(1, domain.authors.size)
+        assertEquals("name", domain.authors.first().name)
         assertEquals("newsSite", domain.newsSite)
         assertEquals("articleUrl", domain.url)
     }
@@ -46,9 +46,9 @@ class ArticleDetailMapperTest {
         )
         val domain = dto.toDomain()
 
-        assertEquals("", domain.imageUrl)
+        assertNull(domain.imageUrl)
         assertEquals("", domain.publishedAt)
-        assertNull(domain.authors)
+        assertEquals(emptyList<Any>(), domain.authors)
         assertNull(domain.url)
         assertNull(domain.newsSite)
     }

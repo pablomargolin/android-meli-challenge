@@ -6,5 +6,5 @@ package com.margo.domain.model
  * @property name The full name of the author.
  */
 data class Author(
-    val name: String?
+    val name: String
 )

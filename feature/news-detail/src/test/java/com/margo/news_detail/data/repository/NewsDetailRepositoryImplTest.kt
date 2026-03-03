@@ -44,7 +44,7 @@ class NewsDetailRepositoryImplTest {
     }
 
     @Test
-    fun `getArticleById returns Error when api call fails with exception`() = runTest {
+    fun `getArticleById returns Error when mapping throws IllegalStateException`() = runTest {
         coEvery { api.getArticleById(any()) } throws Exception("Network error")
 
         val result = repository.getArticleById(1)

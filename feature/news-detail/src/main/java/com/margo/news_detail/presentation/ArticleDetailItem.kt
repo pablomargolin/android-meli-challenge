@@ -55,7 +55,7 @@ internal fun ArticleDetailItem(article: Article) {
 
         DesignText(
             modifier = Modifier.padding(top = baseSizes.size15.dimension),
-            text = article.title ?: String.empty(),
+            text = article.title,
             typography = baseTypographies.textBaseBlackSmall,
             textColor = baseColors.primaryColor
         )
@@ -69,7 +69,7 @@ internal fun ArticleDetailItem(article: Article) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                text = article.authors?.firstOrNull()?.name ?: String.empty(),
+                text = article.authors.firstOrNull()?.name ?: String.empty(),
                 typography = baseTypographies.textBaseNormalXSmall,
                 textColor = baseColors.primaryColor
             )
@@ -77,7 +77,7 @@ internal fun ArticleDetailItem(article: Article) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                text = article.publishedAt ?: String.empty(),
+                text = article.publishedAt,
                 typography = baseTypographies.textBaseNormalXSmall,
                 textColor = baseColors.primaryColor,
                 textAlign = TextAlign.End
@@ -86,7 +86,7 @@ internal fun ArticleDetailItem(article: Article) {
 
         DesignText(
             modifier = Modifier.padding(top = baseSizes.size10.dimension),
-            text = article.summary ?: String.empty(),
+            text = article.summary,
             typography = baseTypographies.textBaseNormalSmall,
             textColor = baseColors.primaryColor
         )

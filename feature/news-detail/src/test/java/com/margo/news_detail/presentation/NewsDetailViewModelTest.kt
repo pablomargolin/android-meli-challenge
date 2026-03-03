@@ -42,7 +42,7 @@ class NewsDetailViewModelTest {
 
     @Test
     fun `getArticleDetail updates uiState to Success when repository returns Success`() = runTest {
-        val article = Article(1, "title", null, null, null, null, null, null)
+        val article = Article(1, "title", emptyList(), null, null, null, "summary", "published")
         coEvery { repository.getArticleById(1) } returns Result.Success(article)
 
         viewModel = NewsDetailViewModel(repository, savedStateHandle)

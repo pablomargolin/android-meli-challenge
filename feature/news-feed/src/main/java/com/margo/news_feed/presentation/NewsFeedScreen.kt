@@ -250,12 +250,12 @@ private fun ArticlesContent(
         item {
             DesignHighlightImageCard(
                 modifier = Modifier.clickable { 
-                    firstArticle.id?.let { onNavigateToDetail(it) } 
+                    onNavigateToDetail(firstArticle.id) 
                 },
                 image = firstArticle.imageUrl ?: String.empty(),
-                title = firstArticle.title ?: String.empty(),
-                leftDescription = firstArticle.authors?.firstOrNull()?.name ?: String.empty(),
-                rightDescription = firstArticle.publishedAt ?: String.empty()
+                title = firstArticle.title,
+                leftDescription = firstArticle.authors.firstOrNull()?.name ?: String.empty(),
+                rightDescription = firstArticle.publishedAt
             )
         }
 
@@ -270,7 +270,7 @@ private fun ArticlesContent(
         val remainingArticles = articles.drop(1)
         itemsIndexed(
             items = remainingArticles,
-            key = { index, article -> article.id ?: index }
+            key = { index, article -> article.id }
         ) { _, article ->
             ArticleItem(
                 imageUrl = article.imageUrl,
@@ -278,7 +278,7 @@ private fun ArticlesContent(
                 authors = article.authors,
                 publishedAt = article.publishedAt,
                 onClick = {
-                    article.id?.let { onNavigateToDetail(it) }
+                    onNavigateToDetail(article.id)
                 }
             )
         }

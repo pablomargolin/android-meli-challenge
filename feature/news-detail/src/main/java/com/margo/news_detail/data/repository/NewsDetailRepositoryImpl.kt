@@ -1,5 +1,6 @@
 package com.margo.news_detail.data.repository
 
+import com.margo.domain.common.ErrorType
 import com.margo.domain.common.Result
 import com.margo.domain.model.Article
 import com.margo.network.di.IoDispatcher
@@ -27,7 +28,12 @@ class NewsDetailRepositoryImpl @Inject constructor(
             val networkResult = safeApiCall { api.getArticleById(id) }
             when (networkResult) {
                 is Result.Success -> {
-                    Result.Success(networkResult.data.toDomain())
+                    runCatching { 
+                        networkResult.data.toDomain() 
+                    }.fold(
+                        onSuccess = { Result.Success(it) },
+                        onFailure = { Result.Error(ErrorType.UNKNOWN, it as Exception) }
+                    )
                 }
                 is Result.Error -> {
                     Result.Error(networkResult.errorType, networkResult.exception)

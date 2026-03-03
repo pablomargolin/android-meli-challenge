@@ -8,13 +8,13 @@ import com.margo.news_feed.data.remote.dto.ArticleDto
  */
 fun ArticleDto.toDomain(): Article {
     return Article(
-        id = id,
-        title = title,
-        authors = authors?.map { it.toDomain() },
+        id = id ?: throw IllegalStateException("Article ID cannot be null"),
+        title = title.orEmpty(),
+        authors = authors?.map { it.toDomain() } ?: emptyList(),
         url = url,
         imageUrl = imageUrl,
         newsSite = newsSite,
-        summary = summary,
-        publishedAt = publishedAt
+        summary = summary.orEmpty(),
+        publishedAt = publishedAt.orEmpty()
     )
 }

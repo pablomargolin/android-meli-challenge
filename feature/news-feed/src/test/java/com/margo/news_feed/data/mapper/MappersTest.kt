@@ -22,7 +22,7 @@ class MappersTest {
         val dto = AuthorDto(name = null)
         val domain = dto.toDomain()
 
-        assertEquals(null, domain.name)
+        assertEquals("", domain.name)
     }
 
     @Test
@@ -70,6 +70,6 @@ class MappersTest {
 
         val domain = articleDto.toDomain()
 
-        assertEquals(null, domain.authors)
+        assertEquals(emptyList<Author>(), domain.authors)
     }
 }

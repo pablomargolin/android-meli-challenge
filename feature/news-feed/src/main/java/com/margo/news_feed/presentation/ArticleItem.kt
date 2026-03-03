@@ -45,9 +45,9 @@ import androidx.compose.foundation.clickable
 fun ArticleItem(
     modifier: Modifier = Modifier,
     imageUrl: String?,
-    title: String?,
-    authors: List<Author>?,
-    publishedAt: String?,
+    title: String,
+    authors: List<Author>,
+    publishedAt: String,
     onClick: () -> Unit
 ) {
     DesignCard(
