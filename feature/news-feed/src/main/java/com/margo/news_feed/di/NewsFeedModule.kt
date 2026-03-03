@@ -7,6 +7,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 
+/**
+ * Hilt module that provides API dependencies for the news feed feature.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NewsFeedModule {

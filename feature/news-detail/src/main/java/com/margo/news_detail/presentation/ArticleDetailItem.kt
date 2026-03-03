@@ -30,6 +30,12 @@ import com.margo.shared_ui.ThemeScope.baseTypographies
 import com.margo.shared_ui.components.DesignAnnotatedText
 import com.margo.shared_ui.components.DesignText
 
+/**
+ * Composable that displays the full details of a specific [Article].
+ * Includes the header image, title, author, publication date, summary, and a clickable source URL.
+ *
+ * @param article The domain model containing the details to display.
+ */
 @Composable
 internal fun ArticleDetailItem(article: Article) {
     Column {

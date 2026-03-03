@@ -9,6 +9,10 @@ import androidx.navigation.navArgument
 import com.margo.news_detail.presentation.NewsDetailRoute
 import com.margo.news_feed.presentation.NewsFeedRoute
 
+/**
+ * Sets up the main navigation graph for the Space Flight application.
+ * It defines the destinations and arguments needed to navigate between the news feed and news detail screens.
+ */
 @Composable
 fun SpaceFlightNavGraph() {
     val navController = rememberNavController()

@@ -1,5 +1,6 @@
 package com.margo.news_feed.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +43,13 @@ import com.margo.shared_ui.ThemeScope.baseTypographies
 import com.margo.shared_ui.components.DesignHighlightImageCard
 import com.margo.shared_ui.components.DesignText
 
+/**
+ * Entry point route for the News Feed screen.
+ * Connects the [NewsFeedViewModel] state and actions to the [NewsFeedScreen] UI.
+ *
+ * @param onNavigateToDetail Callback triggered with an article ID to navigate to its details.
+ * @param viewModel The ViewModel that manages the state of this screen.
+ */
 @Composable
 fun NewsFeedRoute(
     onNavigateToDetail: (Int) -> Unit,
@@ -55,6 +64,7 @@ fun NewsFeedRoute(
         onQueryChange = viewModel::updateSearchQuery,
         onNavigateToDetail = onNavigateToDetail,
         onLoadMore = viewModel::loadMore,
+        onClearPaginationError = viewModel::clearPaginationError,
         onRetry = { viewModel.fetchNews(searchQuery.takeIf { it.isNotBlank() }) }
     )
 }
@@ -66,6 +76,7 @@ internal fun NewsFeedScreen(
     onQueryChange: (String) -> Unit,
     onNavigateToDetail: (Int) -> Unit,
     onLoadMore: () -> Unit,
+    onClearPaginationError: () -> Unit,
     onRetry: () -> Unit
 ) {
     Scaffold(
@@ -78,14 +89,31 @@ internal fun NewsFeedScreen(
         ) {
             when (uiState) {
                 is NewsFeedUiState.Loading -> LoadingScreen()
-                is NewsFeedUiState.Success -> ArticlesContent(
-                    articles = uiState.articles,
-                    searchQuery = searchQuery,
-                    isPaginating = uiState.isPaginating,
-                    onQueryChange = onQueryChange,
-                    onNavigateToDetail = onNavigateToDetail,
-                    onLoadMore = onLoadMore
-                )
+                is NewsFeedUiState.Success -> {
+                    val context = LocalContext.current
+                    
+                    LaunchedEffect(uiState.paginationError) {
+                        uiState.paginationError?.let { errorType ->
+                            val errorMessage = when (errorType) {
+                                ErrorType.NO_INTERNET -> context.getString(NetworkR.string.error_no_internet)
+                                ErrorType.SERVER_ERROR -> context.getString(NetworkR.string.error_server)
+                                ErrorType.NOT_FOUND -> context.getString(NetworkR.string.error_not_found)
+                                ErrorType.UNKNOWN -> context.getString(NetworkR.string.error_unknown)
+                            }
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            onClearPaginationError()
+                        }
+                    }
+
+                    ArticlesContent(
+                        articles = uiState.articles,
+                        searchQuery = searchQuery,
+                        isPaginating = uiState.isPaginating,
+                        onQueryChange = onQueryChange,
+                        onNavigateToDetail = onNavigateToDetail,
+                        onLoadMore = onLoadMore
+                    )
+                }
                 is NewsFeedUiState.Error -> {
                     val errorMessage = when (uiState.errorType) {
                         ErrorType.NO_INTERNET -> stringResource(NetworkR.string.error_no_internet)

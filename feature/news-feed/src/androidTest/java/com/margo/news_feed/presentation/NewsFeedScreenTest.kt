@@ -28,6 +28,7 @@ class NewsFeedScreenTest {
                     onQueryChange = {},
                     onNavigateToDetail = {},
                     onLoadMore = {},
+                    onClearPaginationError = {},
                     onRetry = {}
                 )
             }
@@ -49,6 +50,7 @@ class NewsFeedScreenTest {
                     onQueryChange = {},
                     onNavigateToDetail = {},
                     onLoadMore = {},
+                    onClearPaginationError = {},
                     onRetry = { retryClicked = true }
                 )
             }
@@ -69,6 +71,7 @@ class NewsFeedScreenTest {
                     onQueryChange = {},
                     onNavigateToDetail = {},
                     onLoadMore = {},
+                    onClearPaginationError = {},
                     onRetry = {}
                 )
             }
@@ -112,6 +115,7 @@ class NewsFeedScreenTest {
                     onQueryChange = {},
                     onNavigateToDetail = { navigatedId = it },
                     onLoadMore = {},
+                    onClearPaginationError = {},
                     onRetry = {}
                 )
             }
@@ -147,6 +151,7 @@ class NewsFeedScreenTest {
                     onQueryChange = {},
                     onNavigateToDetail = {},
                     onLoadMore = {},
+                    onClearPaginationError = {},
                     onRetry = {}
                 )
             }

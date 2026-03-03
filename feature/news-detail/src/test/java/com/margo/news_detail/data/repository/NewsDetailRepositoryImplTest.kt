@@ -6,6 +6,7 @@ import com.margo.news_detail.data.remote.NewsDetailApi
 import com.margo.news_detail.data.remote.dto.ArticleDetailDto
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -17,7 +18,8 @@ import retrofit2.Response
 class NewsDetailRepositoryImplTest {
 
     private val api: NewsDetailApi = mockk()
-    private val repository = NewsDetailRepositoryImpl(api)
+    private val testDispatcher = UnconfinedTestDispatcher()
+    private val repository = NewsDetailRepositoryImpl(api, testDispatcher)
 
     @Test
     fun `getArticleById returns Success when api returns successful response`() = runTest {

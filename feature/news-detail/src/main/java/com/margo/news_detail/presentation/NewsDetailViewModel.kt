@@ -1,6 +1,5 @@
 package com.margo.news_detail.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.SavedStateHandle
@@ -12,19 +11,36 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for managing the state and logic of the News Detail screen.
+ * It retrieves the article ID from the navigation arguments and fetches its full details.
+ *
+ * @property newsDetailRepository The repository used to fetch specific article details.
+ * @property savedStateHandle Handle to retrieve navigation arguments like the article ID.
+ */
 @HiltViewModel
 class NewsDetailViewModel @Inject constructor(
     private val newsDetailRepository: NewsDetailRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<NewsDetailUiState>(NewsDetailUiState.Loading)
+    
+    /**
+     * The observable state of the UI. Represents loading, success (with article details), or error states.
+     */
     val uiState: StateFlow<NewsDetailUiState> = _uiState.asStateFlow()
 
     init {
         getArticleDetail()
     }
+    
+    /**
+     * Fetches the details of the article using the ID passed via navigation.
+     * Updates the [uiState] based on the result of the network call.
+     */
     fun getArticleDetail() {
         val id: Int = checkNotNull(savedStateHandle["articleId"])
         _uiState.value = NewsDetailUiState.Loading
@@ -38,7 +54,7 @@ class NewsDetailViewModel @Inject constructor(
 
                 is Result.Error -> {
                     result.exception?.let { error ->
-                        Log.e("NewsFeedViewModel", "Fallo al obtener noticias: ${error.message}", error)
+                        Timber.e(error, "Failed to fetch article details")
                     }
 
                     _uiState.value = NewsDetailUiState.Error(result.errorType)

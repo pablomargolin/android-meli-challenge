@@ -7,6 +7,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+/**
+ * Hilt module that binds the interface [NewsDetailRepository] to its implementation [NewsDetailRepositoryImpl].
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NewsDetailRepositoryModule {

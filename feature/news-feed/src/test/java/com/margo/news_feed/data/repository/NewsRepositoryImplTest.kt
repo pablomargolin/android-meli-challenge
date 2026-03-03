@@ -8,6 +8,7 @@ import com.margo.news_feed.data.remote.dto.AuthorDto
 import com.margo.news_feed.data.remote.dto.NewsFeedResponseDto
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -21,11 +22,12 @@ class NewsRepositoryImplTest {
 
     private lateinit var api: NewsFeedApi
     private lateinit var repository: NewsRepositoryImpl
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
         api = mockk()
-        repository = NewsRepositoryImpl(api)
+        repository = NewsRepositoryImpl(api, testDispatcher)
     }
 
     @Test

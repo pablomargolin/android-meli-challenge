@@ -10,9 +10,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+/**
+ * Hilt module that provides network-related dependencies such as Retrofit, OkHttpClient, and Moshi.
+ * These instances are provided as Singletons across the entire application lifecycle.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -29,8 +34,16 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+        val logger = HttpLoggingInterceptor.Logger { message ->
+            Timber.tag("OkHttp").d(message)
+        }
+
+        return HttpLoggingInterceptor(logger).apply {
+            level = if (com.margo.network.BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
     }
 

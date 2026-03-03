@@ -9,6 +9,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * The single, main activity of the application.
+ * It serves as the container for Jetpack Compose UI and sets up the root [SpaceFlightNavGraph].
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
