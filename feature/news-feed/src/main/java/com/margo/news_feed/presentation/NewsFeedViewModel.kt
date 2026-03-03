@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.margo.domain.common.Result
 import com.margo.domain.model.Article
-import com.margo.news_feed.domain.repository.NewsRepository
+import com.margo.news_feed.domain.usecase.GetNewsFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,11 +21,11 @@ import kotlinx.coroutines.delay
  * ViewModel responsible for managing the state and logic of the News Feed screen.
  * It handles fetching paginated news, managing search queries, and retaining state across configuration changes.
  *
- * @property newsRepository The repository used to fetch news data.
+ * @property getNewsFeedUseCase The use case used to fetch news data.
  */
 @HiltViewModel
 class NewsFeedViewModel @Inject constructor(
-    private val newsRepository: NewsRepository
+    private val getNewsFeedUseCase: GetNewsFeedUseCase
 ) : ViewModel() {
 
     data class FeedState(
@@ -95,7 +95,7 @@ class NewsFeedViewModel @Inject constructor(
 
         viewModelScope.launch {
             val currentOffset = _feedState.value.offset
-            when (val result = newsRepository.getNews(query, currentOffset)) {
+            when (val result = getNewsFeedUseCase(query, currentOffset)) {
 
                 is Result.Success -> {
                     val newArticles = result.data

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.SavedStateHandle
 import com.margo.domain.common.ErrorType
 import com.margo.domain.common.Result
-import com.margo.news_detail.domain.repository.NewsDetailRepository
+import com.margo.news_detail.domain.usecase.GetArticleDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,12 +18,12 @@ import javax.inject.Inject
  * ViewModel responsible for managing the state and logic of the News Detail screen.
  * It retrieves the article ID from the navigation arguments and fetches its full details.
  *
- * @property newsDetailRepository The repository used to fetch specific article details.
+ * @property getArticleDetailUseCase The use case used to fetch specific article details.
  * @property savedStateHandle Handle to retrieve navigation arguments like the article ID.
  */
 @HiltViewModel
 class NewsDetailViewModel @Inject constructor(
-    private val newsDetailRepository: NewsDetailRepository,
+    private val getArticleDetailUseCase: GetArticleDetailUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<NewsDetailUiState>(NewsDetailUiState.Loading)
@@ -51,7 +51,7 @@ class NewsDetailViewModel @Inject constructor(
         _uiState.value = NewsDetailUiState.Loading
 
         viewModelScope.launch {
-            when (val result = newsDetailRepository.getArticleById(id)) {
+            when (val result = getArticleDetailUseCase(id)) {
 
                 is Result.Success -> {
                     _uiState.value = NewsDetailUiState.Success(result.data)
