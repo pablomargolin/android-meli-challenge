@@ -69,7 +69,7 @@ internal fun ArticleDetailItem(article: Article) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                text = article.authors?.first()?.name ?: String.empty(),
+                text = article.authors?.firstOrNull()?.name ?: String.empty(),
                 typography = baseTypographies.textBaseNormalXSmall,
                 textColor = baseColors.primaryColor
             )

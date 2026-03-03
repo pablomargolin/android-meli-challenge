@@ -97,7 +97,7 @@ fun ArticleItem(
                     DesignText(
                         modifier = Modifier
                             .weight(1f),
-                        text = authors?.first()?.name ?: String.empty(),
+                        text = authors?.firstOrNull()?.name ?: String.empty(),
                         typography = baseTypographies.textBaseNormalXSmall,
                         textColor = baseColors.primaryColor,
                         maxLines = 1

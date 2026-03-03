@@ -42,7 +42,12 @@ class NewsDetailViewModel @Inject constructor(
      * Updates the [uiState] based on the result of the network call.
      */
     fun getArticleDetail() {
-        val id: Int = checkNotNull(savedStateHandle["articleId"])
+        val id: Int? = savedStateHandle["articleId"]
+        if (id == null) {
+            _uiState.value = NewsDetailUiState.Error(ErrorType.UNKNOWN)
+            return
+        }
+
         _uiState.value = NewsDetailUiState.Loading
 
         viewModelScope.launch {
