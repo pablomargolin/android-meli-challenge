@@ -49,7 +49,7 @@ internal fun ArticleDetailItem(article: Article) {
                 .crossfade(500)
                 .scale(Scale.FIT)
                 .build(),
-            contentDescription = null,
+            contentDescription = article.title,
             contentScale = ContentScale.Crop
         )
 
@@ -110,7 +110,7 @@ private fun ArticleUrlItem(article: Article) {
                     fontWeight = FontWeight.Bold
                 )
                 ) {
-                    append(article.newsSite)
+                    append(article.newsSite ?: article.url ?: String.empty())
                 }
             }
         }

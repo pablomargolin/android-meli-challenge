@@ -171,7 +171,7 @@ private fun LoadingScreen() {
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            modifier = Modifier.testTag("needScreenLoading"),
+            modifier = Modifier.testTag("newsScreenLoading"),
             color = baseColors.actionColor.color
         )
     }

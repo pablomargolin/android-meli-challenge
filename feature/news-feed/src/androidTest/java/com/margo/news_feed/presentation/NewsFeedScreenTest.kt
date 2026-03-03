@@ -35,7 +35,7 @@ class NewsFeedScreenTest {
         }
 
         composeTestRule.onNodeWithText("Retry").assertDoesNotExist()
-        composeTestRule.onNodeWithTag("needScreenLoading").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("newsScreenLoading").assertIsDisplayed()
     }
 
     @Test

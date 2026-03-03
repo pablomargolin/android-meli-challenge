@@ -32,7 +32,7 @@ class NewsDetailRepositoryImpl @Inject constructor(
                         networkResult.data.toDomain() 
                     }.fold(
                         onSuccess = { Result.Success(it) },
-                        onFailure = { Result.Error(ErrorType.UNKNOWN, it as Exception) }
+                        onFailure = { Result.Error(ErrorType.UNKNOWN, Exception(it)) }
                     )
                 }
                 is Result.Error -> {
