@@ -5,7 +5,6 @@ import com.margo.domain.common.ErrorType
 import com.margo.domain.common.Result
 import com.margo.domain.model.Article
 import com.margo.domain.utils.empty
-import com.margo.news_feed.domain.repository.NewsRepository
 import com.margo.news_feed.domain.usecase.GetNewsFeedUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -129,6 +128,82 @@ class NewsFeedViewModelTest {
         advanceUntilIdle()
 
         coVerify { getNewsFeedUseCase(null, 0) }
+    }
+
+    @Test
+    fun `updateSearchQuery with rapid changes should trigger only one network call after debounce`() = runTest {
+        coEvery { getNewsFeedUseCase(any(), any()) } returns Result.Success(emptyList())
+        viewModel = NewsFeedViewModel(getNewsFeedUseCase)
+        advanceUntilIdle()
+
+        viewModel.updateSearchQuery("M")
+        viewModel.updateSearchQuery("Me")
+        viewModel.updateSearchQuery("Mel")
+        viewModel.updateSearchQuery("Meli")
+
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { getNewsFeedUseCase("Meli", 0) }
+        coVerify(exactly = 0) { getNewsFeedUseCase("M", 0) }
+        coVerify(exactly = 0) { getNewsFeedUseCase("Me", 0) }
+        coVerify(exactly = 0) { getNewsFeedUseCase("Mel", 0) }
+    }
+
+    @Test
+    fun `fetchNews should filter duplicate articles by ID`() = runTest {
+        val article1 = Article(1, "title1", emptyList(), null, null, null, "summary1", "published1")
+        val article1Duplicate = Article(1, "title1 duplicate", emptyList(), null, null, null, "summary1", "published1")
+        
+        coEvery { getNewsFeedUseCase(null, 0) } returns Result.Success(listOf(article1))
+        viewModel = NewsFeedViewModel(getNewsFeedUseCase)
+        advanceUntilIdle()
+
+        coEvery { getNewsFeedUseCase(null, 1) } returns Result.Success(listOf(article1Duplicate))
+        
+        viewModel.loadMore()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as NewsFeedUiState.Success
+        assertEquals(1, state.articles.size)
+        assertEquals("title1", state.articles[0].title)
+    }
+
+    @Test
+    fun `loadMore error should set paginationError without losing existing articles`() = runTest {
+        val initialArticles = listOf(
+            Article(1, "title1", emptyList(), null, null, null, "summary1", "published1")
+        )
+        coEvery { getNewsFeedUseCase(null, 0) } returns Result.Success(initialArticles)
+        viewModel = NewsFeedViewModel(getNewsFeedUseCase)
+        advanceUntilIdle()
+
+        coEvery { getNewsFeedUseCase(null, 1) } returns Result.Error(ErrorType.NO_INTERNET)
+
+        viewModel.loadMore()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as NewsFeedUiState.Success
+        assertEquals(initialArticles, state.articles)
+        assertEquals(ErrorType.NO_INTERNET, state.paginationError)
+    }
+
+    @Test
+    fun `clearPaginationError should remove error from state`() = runTest {
+        val initialArticles = listOf(
+            Article(1, "title1", emptyList(), null, null, null, "summary1", "published1")
+        )
+        coEvery { getNewsFeedUseCase(null, 0) } returns Result.Success(initialArticles)
+        viewModel = NewsFeedViewModel(getNewsFeedUseCase)
+        advanceUntilIdle()
+
+        coEvery { getNewsFeedUseCase(null, 1) } returns Result.Error(ErrorType.SERVER_ERROR)
+        viewModel.loadMore()
+        advanceUntilIdle()
+
+        viewModel.clearPaginationError()
+        
+        val state = viewModel.uiState.value as NewsFeedUiState.Success
+        assertEquals(null, state.paginationError)
     }
 
     @Test

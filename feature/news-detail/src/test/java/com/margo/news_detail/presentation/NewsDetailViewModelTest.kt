@@ -5,7 +5,6 @@ import app.cash.turbine.test
 import com.margo.domain.common.ErrorType
 import com.margo.domain.common.Result
 import com.margo.domain.model.Article
-import com.margo.news_detail.domain.repository.NewsDetailRepository
 import com.margo.news_detail.domain.usecase.GetArticleDetailUseCase
 import io.mockk.coEvery
 import io.mockk.every
@@ -99,6 +98,26 @@ class NewsDetailViewModelTest {
         viewModel.uiState.test {
             assertEquals(NewsDetailUiState.Loading, awaitItem())
             assertEquals(NewsDetailUiState.Error(ErrorType.UNKNOWN), awaitItem())
+        }
+    }
+
+    @Test
+    fun `getArticleDetail retry updates uiState to Success after initial error`() = runTest {
+        coEvery { getArticleDetailUseCase(1) } returns Result.Error(ErrorType.SERVER_ERROR)
+
+        viewModel = NewsDetailViewModel(getArticleDetailUseCase, savedStateHandle)
+
+        viewModel.uiState.test {
+            assertEquals(NewsDetailUiState.Loading, awaitItem())
+            assertEquals(NewsDetailUiState.Error(ErrorType.SERVER_ERROR), awaitItem())
+
+            val article = Article(1, "title", emptyList(), null, null, null, "summary", "published")
+            coEvery { getArticleDetailUseCase(1) } returns Result.Success(article)
+
+            viewModel.getArticleDetail()
+
+            assertEquals(NewsDetailUiState.Loading, awaitItem())
+            assertEquals(NewsDetailUiState.Success(article), awaitItem())
         }
     }
 }
