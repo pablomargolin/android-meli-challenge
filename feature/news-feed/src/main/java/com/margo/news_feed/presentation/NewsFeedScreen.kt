@@ -196,7 +196,7 @@ private fun ArticlesContent(
                 modifier = Modifier.padding(top = baseSizes.size10.dimension),
                 query = searchQuery,
                 onQueryChange = onQueryChange,
-                placeholderText = "Search news..."
+                placeholderText = stringResource(R.string.search_placeholder)
             )
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 DesignText(
@@ -236,7 +236,7 @@ private fun ArticlesContent(
                 modifier = Modifier.padding(top = baseSizes.size10.dimension),
                 query = searchQuery,
                 onQueryChange = onQueryChange,
-                placeholderText = "Search news..."
+                placeholderText = stringResource(R.string.search_placeholder)
             )
         }
         
