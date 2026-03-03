@@ -4,4 +4,6 @@
     <string name="see_more_title">See more…</string>
     <string name="retry_button">Retry</string>
     <string name="empty_news_state">There is no news at this time.</string>
+    <string name="search_placeholder">Search news...</string>
+    <string name="search_icon_description">Search icon</string>
 </resources>

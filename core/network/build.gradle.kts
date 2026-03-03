@@ -6,9 +6,7 @@ plugins {
 
 android {
     namespace = "com.margo.network"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 29

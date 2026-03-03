@@ -17,6 +17,9 @@ import com.margo.shared_ui.ThemeScope.baseSizes
 import com.margo.shared_ui.theme.ColorTheme
 import com.margo.shared_ui.theme.SizeTheme
 
+import androidx.compose.ui.tooling.preview.Preview
+import com.margo.shared_ui.SpaceFlightTheme
+
 @Composable
 fun DesignCard(
     modifier: Modifier = Modifier,
@@ -37,6 +40,23 @@ fun DesignCard(
     ) {
         Column {
             content()
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DesignCardPreview() {
+    SpaceFlightTheme {
+        DesignCard(
+            modifier = Modifier.padding(baseSizes.size10.dimension)
+        ) {
+            DesignText(
+                modifier = Modifier.padding(baseSizes.size10.dimension),
+                text = "Card Content",
+                typography = com.margo.shared_ui.ThemeScope.baseTypographies.textBaseNormal,
+                textColor = baseColors.primaryColor
+            )
         }
     }
 }

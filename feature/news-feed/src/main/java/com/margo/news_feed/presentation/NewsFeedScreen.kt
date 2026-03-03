@@ -196,7 +196,7 @@ private fun ArticlesContent(
                 modifier = Modifier.padding(top = baseSizes.size10.dimension),
                 query = searchQuery,
                 onQueryChange = onQueryChange,
-                placeholderText = "Search news..."
+                placeholderText = stringResource(R.string.search_placeholder)
             )
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 DesignText(
@@ -214,14 +214,18 @@ private fun ArticlesContent(
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .filter { it != null && it >= articles.size }
-            .distinctUntilChanged()
-            .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null && lastVisibleIndex >= listState.layoutInfo.totalItemsCount - 3) {
-                    onLoadMore()
-                }
+        snapshotFlow { 
+            val layoutInfo = listState.layoutInfo
+            val totalItemsNumber = layoutInfo.totalItemsCount
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            totalItemsNumber > 0 && lastVisibleItemIndex >= (totalItemsNumber - 3)
+        }
+        .distinctUntilChanged()
+        .collect { isNearEnd ->
+            if (isNearEnd && !isPaginating) {
+                onLoadMore()
             }
+        }
     }
 
     LazyColumn(
@@ -236,7 +240,7 @@ private fun ArticlesContent(
                 modifier = Modifier.padding(top = baseSizes.size10.dimension),
                 query = searchQuery,
                 onQueryChange = onQueryChange,
-                placeholderText = "Search news..."
+                placeholderText = stringResource(R.string.search_placeholder)
             )
         }
         
@@ -250,12 +254,12 @@ private fun ArticlesContent(
         item {
             DesignHighlightImageCard(
                 modifier = Modifier.clickable { 
-                    firstArticle.id?.let { onNavigateToDetail(it) } 
+                    onNavigateToDetail(firstArticle.id) 
                 },
                 image = firstArticle.imageUrl ?: String.empty(),
-                title = firstArticle.title ?: String.empty(),
-                leftDescription = firstArticle.authors?.firstOrNull()?.name ?: String.empty(),
-                rightDescription = firstArticle.publishedAt ?: String.empty()
+                title = firstArticle.title,
+                leftDescription = firstArticle.authors.firstOrNull()?.name ?: String.empty(),
+                rightDescription = firstArticle.publishedAt
             )
         }
 
@@ -270,7 +274,7 @@ private fun ArticlesContent(
         val remainingArticles = articles.drop(1)
         itemsIndexed(
             items = remainingArticles,
-            key = { index, article -> article.id ?: index }
+            key = { index, article -> article.id }
         ) { _, article ->
             ArticleItem(
                 imageUrl = article.imageUrl,
@@ -278,7 +282,7 @@ private fun ArticlesContent(
                 authors = article.authors,
                 publishedAt = article.publishedAt,
                 onClick = {
-                    article.id?.let { onNavigateToDetail(it) }
+                    onNavigateToDetail(article.id)
                 }
             )
         }

@@ -22,6 +22,6 @@ class AuthorDetailMapperTest {
         )
         val domain = dto.toDomain()
 
-        assertEquals(null, domain.name)
+        assertEquals("", domain.name)
     }
 }

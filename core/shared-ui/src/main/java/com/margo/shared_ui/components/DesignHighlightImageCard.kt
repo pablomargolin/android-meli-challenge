@@ -84,7 +84,7 @@ fun DesignHighlightImageCard(
 
 enum class HighlightImageCardScale(val value: Scale) {
     FILL(Scale.FILL),
-    FIT(Scale.FILL)
+    FIT(Scale.FIT)
 }
 
 enum class HighlightImageCardContentScale(val value: ContentScale) {

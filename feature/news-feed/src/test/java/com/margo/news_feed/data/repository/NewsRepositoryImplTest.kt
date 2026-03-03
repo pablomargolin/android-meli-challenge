@@ -57,6 +57,43 @@ class NewsRepositoryImplTest {
     }
 
     @Test
+    fun `getNews drops articles that throw IllegalStateException during mapping`() = runTest {
+        val validArticleDto = ArticleDto(
+            id = 1,
+            title = "valid title",
+            authors = listOf(AuthorDto("name")),
+            url = "url",
+            imageUrl = "imageUrl",
+            newsSite = "newsSite",
+            summary = "summary",
+            publishedAt = "published"
+        )
+        val invalidArticleDto = ArticleDto(
+            id = null,
+            title = "invalid title",
+            authors = listOf(AuthorDto("name")),
+            url = "url",
+            imageUrl = "imageUrl",
+            newsSite = "newsSite",
+            summary = "summary",
+            publishedAt = "published"
+        )
+        
+        val mockResponseDto = NewsFeedResponseDto(results = listOf(validArticleDto, invalidArticleDto))
+        val response = Response.success(mockResponseDto)
+        
+        coEvery { api.getArticles(limit = any(), offset = any(), query = any()) } returns response
+
+        val result = repository.getNews()
+
+        assertTrue(result is Result.Success)
+        val successResult = result as Result.Success
+        assertEquals(1, successResult.data.size)
+        assertEquals(1, successResult.data[0].id)
+        assertEquals("valid title", successResult.data[0].title)
+    }
+
+    @Test
     fun `getNews returns Error when api call fails with exception`() = runTest {
         coEvery { api.getArticles(limit = any(), offset = any(), query = any()) } throws Exception("Network error")
 

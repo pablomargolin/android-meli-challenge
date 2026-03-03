@@ -12,6 +12,11 @@ import androidx.compose.ui.text.style.TextOverflow.Companion
 import com.margo.shared_ui.theme.ColorTheme
 import com.margo.shared_ui.foundation.Typography
 
+import androidx.compose.ui.tooling.preview.Preview
+import com.margo.shared_ui.SpaceFlightTheme
+import com.margo.shared_ui.ThemeScope.baseColors
+import com.margo.shared_ui.ThemeScope.baseTypographies
+
 @Composable
 fun DesignText(
     modifier: Modifier = Modifier,
@@ -38,6 +43,18 @@ fun DesignText(
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun DesignTextPreview() {
+    SpaceFlightTheme {
+        DesignText(
+            text = "Text",
+            typography = baseTypographies.textBaseBold,
+            textColor = baseColors.primaryColor
+        )
+    }
+}
+
 @Composable
 fun DesignAnnotatedText(
     modifier: Modifier = Modifier,
@@ -62,4 +79,16 @@ fun DesignAnnotatedText(
         style = style,
         overflow = overflow
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DesignAnnotatedTextPreview() {
+    SpaceFlightTheme {
+        DesignAnnotatedText(
+            text = AnnotatedString("Annotated Text"),
+            typography = baseTypographies.textBaseNormal,
+            textColor = baseColors.primaryColor
+        )
+    }
 }

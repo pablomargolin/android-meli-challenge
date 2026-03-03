@@ -7,9 +7,7 @@ plugins {
 
 android {
     namespace = "com.margo.news_feed"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 29

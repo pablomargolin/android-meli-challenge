@@ -8,6 +8,6 @@ import com.margo.news_feed.data.remote.dto.AuthorDto
  */
 fun AuthorDto.toDomain(): Author {
     return Author(
-        name = name
+        name = name.orEmpty()
     )
 }

@@ -1,6 +1,7 @@
 package com.margo.shared_ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -13,6 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.margo.shared_ui.ThemeScope.baseColors
 import com.margo.shared_ui.ThemeScope.baseSizes
 import com.margo.shared_ui.ThemeScope.baseTypographies
+
+import androidx.compose.ui.tooling.preview.Preview
+import com.margo.shared_ui.SpaceFlightTheme
 
 @Composable
 fun DesignSearchBar(
@@ -52,4 +56,16 @@ fun DesignSearchBar(
             cursorColor = baseColors.actionColor.color
         )
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DesignSearchBarPreview() {
+    SpaceFlightTheme {
+        DesignSearchBar(
+            modifier = Modifier.padding(baseSizes.size10.dimension),
+            query = "",
+            onQueryChange = {}
+        )
+    }
 }

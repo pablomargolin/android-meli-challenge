@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.margo.domain.common.Result
 import com.margo.domain.model.Article
-import com.margo.news_feed.domain.repository.NewsRepository
+import com.margo.news_feed.domain.usecase.GetNewsFeedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import timber.log.Timber
@@ -20,12 +21,22 @@ import kotlinx.coroutines.delay
  * ViewModel responsible for managing the state and logic of the News Feed screen.
  * It handles fetching paginated news, managing search queries, and retaining state across configuration changes.
  *
- * @property newsRepository The repository used to fetch news data.
+ * @property getNewsFeedUseCase The use case used to fetch news data.
  */
 @HiltViewModel
 class NewsFeedViewModel @Inject constructor(
-    private val newsRepository: NewsRepository
+    private val getNewsFeedUseCase: GetNewsFeedUseCase
 ) : ViewModel() {
+
+    data class FeedState(
+        val offset: Int = 0,
+        val isLastPage: Boolean = false,
+        val isPaginating: Boolean = false,
+        val articles: List<Article> = emptyList()
+    )
+
+    private val _feedState = MutableStateFlow(FeedState())
+
     private val _uiState = MutableStateFlow<NewsFeedUiState>(NewsFeedUiState.Loading)
     
     /**
@@ -41,11 +52,6 @@ class NewsFeedViewModel @Inject constructor(
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     private var searchJob: Job? = null
-
-    private var currentOffset = 0
-    private var isLastPage = false
-    private var isPaginating = false
-    private val currentArticles = mutableListOf<Article>()
 
     init {
         fetchNews()
@@ -73,13 +79,14 @@ class NewsFeedViewModel @Inject constructor(
      */
     fun fetchNews(query: String? = null, isRefresh: Boolean = true) {
         if (isRefresh) {
-            currentOffset = 0
-            isLastPage = false
-            currentArticles.clear()
+            _feedState.value = FeedState()
             _uiState.value = NewsFeedUiState.Loading
         } else {
-            if (isLastPage || isPaginating) return
-            isPaginating = true
+            val currentFeedState = _feedState.value
+            if (currentFeedState.isLastPage || currentFeedState.isPaginating) return
+            
+            _feedState.update { it.copy(isPaginating = true) }
+            
             val currentState = _uiState.value
             if (currentState is NewsFeedUiState.Success) {
                 _uiState.value = currentState.copy(isPaginating = true)
@@ -87,30 +94,35 @@ class NewsFeedViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            when (val result = newsRepository.getNews(query, currentOffset)) {
+            val currentOffset = _feedState.value.offset
+            when (val result = getNewsFeedUseCase(query, currentOffset)) {
 
                 is Result.Success -> {
                     val newArticles = result.data
-                    if (newArticles.isEmpty()) {
-                        isLastPage = true
-                    } else {
-                        val uniqueNewArticles = newArticles.filterNot { newArticle ->
-                            currentArticles.any { it.id == newArticle.id }
-                        }
-                        currentArticles.addAll(uniqueNewArticles)
-                        currentOffset += newArticles.size
-                    }
-                    isPaginating = false
                     
+                    _feedState.update { currentState ->
+                        val uniqueNewArticles = newArticles.filterNot { newArticle ->
+                            currentState.articles.any { it.id == newArticle.id }
+                        }
+                        
+                        currentState.copy(
+                            isLastPage = newArticles.isEmpty(),
+                            articles = currentState.articles + uniqueNewArticles,
+                            offset = currentState.offset + newArticles.size,
+                            isPaginating = false
+                        )
+                    }
+                    
+                    val updatedFeedState = _feedState.value
                     _uiState.value = NewsFeedUiState.Success(
-                        articles = currentArticles.toList(),
+                        articles = updatedFeedState.articles,
                         isPaginating = false,
-                        isLastPage = isLastPage
+                        isLastPage = updatedFeedState.isLastPage
                     )
                 }
 
                 is Result.Error -> {
-                    isPaginating = false
+                    _feedState.update { it.copy(isPaginating = false) }
                     if (isRefresh) {
                         result.exception?.let { error ->
                             Timber.e(error, "Failed to fetch news")
@@ -134,6 +146,10 @@ class NewsFeedViewModel @Inject constructor(
      * Triggers the pagination logic to fetch the next set of articles using the current search query.
      */
     fun loadMore() {
+        val currentState = _uiState.value
+        if (currentState is NewsFeedUiState.Success && (currentState.isPaginating || currentState.paginationError != null)) {
+            return
+        }
         val query = _searchQuery.value.takeIf { it.isNotBlank() }
         fetchNews(query, isRefresh = false)
     }
