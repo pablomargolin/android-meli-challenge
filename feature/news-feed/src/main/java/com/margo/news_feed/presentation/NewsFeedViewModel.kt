@@ -94,7 +94,10 @@ class NewsFeedViewModel @Inject constructor(
                     if (newArticles.isEmpty()) {
                         isLastPage = true
                     } else {
-                        currentArticles.addAll(newArticles)
+                        val uniqueNewArticles = newArticles.filterNot { newArticle ->
+                            currentArticles.any { it.id == newArticle.id }
+                        }
+                        currentArticles.addAll(uniqueNewArticles)
                         currentOffset += newArticles.size
                     }
                     isPaginating = false
