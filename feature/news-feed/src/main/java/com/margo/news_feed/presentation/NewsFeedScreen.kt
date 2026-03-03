@@ -214,14 +214,18 @@ private fun ArticlesContent(
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .filter { it != null && it >= articles.size }
-            .distinctUntilChanged()
-            .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null && lastVisibleIndex >= listState.layoutInfo.totalItemsCount - 3) {
-                    onLoadMore()
-                }
+        snapshotFlow { 
+            val layoutInfo = listState.layoutInfo
+            val totalItemsNumber = layoutInfo.totalItemsCount
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            totalItemsNumber > 0 && lastVisibleItemIndex >= (totalItemsNumber - 3)
+        }
+        .distinctUntilChanged()
+        .collect { isNearEnd ->
+            if (isNearEnd && !isPaginating) {
+                onLoadMore()
             }
+        }
     }
 
     LazyColumn(

@@ -146,6 +146,10 @@ class NewsFeedViewModel @Inject constructor(
      * Triggers the pagination logic to fetch the next set of articles using the current search query.
      */
     fun loadMore() {
+        val currentState = _uiState.value
+        if (currentState is NewsFeedUiState.Success && (currentState.isPaginating || currentState.paginationError != null)) {
+            return
+        }
         val query = _searchQuery.value.takeIf { it.isNotBlank() }
         fetchNews(query, isRefresh = false)
     }
